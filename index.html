@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DO OR DIE — Ultimate Truth or Dare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            DEFAULT: '#0B1B3D',
+                            light: '#162A52',
+                            dark: '#050E21',
+                        },
+                        gold: {
+                            DEFAULT: '#D4AF37',
+                            light: '#FFD700',
+                            dark: '#AA820A',
+                        },
+                        cherry: {
+                            DEFAULT: '#D62828',
+                            hover: '#B51D1D',
+                            light: '#E63946',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0B1B3D;
+            color: #162A52;
+            touch-action: manipulation;
+        }
+
+        .bottle-shadow {
+            filter: drop-shadow(0px 15px 12px rgba(0, 0, 0, 0.35));
+        }
+
+        /* Smooth spinner rotation */
+        .spinning {
+            transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B1B3D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #162A52;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #AA820A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-glow {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-navy min-h-screen text-slate-100 flex flex-col justify-between overflow-x-hidden select-none">
+
+    <!-- TOP NAV HEADER -->
+    <header class="bg-navy-dark/80 backdrop-blur-md border-b border-navy-light px-4 py-3 sticky top-0 z-40 flex justify-between items-center">
+        <div class="flex items-center space-x-2 cursor-pointer" onclick="confirmExitToSetup()">
+            <div class="w-8 h-8 rounded-full bg-cherry flex items-center justify-center font-black text-white text-lg shadow-md">D</div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight gold-gradient-text leading-none" id="appTitleHeader">DO OR DIE</h1>
+                <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase block">Ultimate Challenge</span>
+            </div>
+        </div>
+        <div id="headerActions" class="hidden flex items-center gap-2">
+            <button onclick="toggleScoreboardModal(true)" class="bg-navy-light border border-gold/40 hover:border-gold text-gold px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 17.9V20H7v2h10v-2h-4v-2.1c2.21-.26 4-2.15 4-4.54V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                <span>Scores</span>
+            </button>
+            <button onclick="confirmEndGame()" class="bg-cherry/20 hover:bg-cherry text-cherry hover:text-white border border-cherry/50 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                End Game
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow flex items-center justify-center p-4 max-w-4xl mx-auto w-full">
+
+        <!-- 1. WELCOME SCREEN -->
+        <section id="welcomeScreen" class="w-full text-center py-6 space-y-8 transition-all duration-300">
+            <div class="space-y-3">
+                <div class="inline-block px-4 py-1.5 rounded-full bg-cherry/10 border border-cherry/30 text-cherry text-xs font-extrabold tracking-widest uppercase">
+                    The Party Starter Game
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black tracking-extrabold text-white uppercase drop-shadow-lg">
+                    DO OR <span class="gold-gradient-text">DIE</span>
+                </h1>
+                <p class="text-slate-300 max-w-md mx-auto text-sm md:text-base font-medium">
+                    "Choose Your Players. Spin the Bottle. Face the Challenge."
+                </p>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 max-w-md mx-auto backdrop-blur-sm shadow-2xl space-y-4">
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="p-3 bg-navy-light/60 rounded-xl border border-white/5">
+                        <div class="text-2xl font-bold text-gold">600</div>
+                        <div class="text-[11px] text-slate-400 uppercase font-semibold">Prompts</div>
+                    </div>
+                    <div class="p-3 bg-navy-light/60 rounded-xl border border-white/5">
+                        <div class="text-2xl font-bold text-cherry">3</div>
+                        <div class="text-[11px] text-slate-400 uppercase font-semibold">Sectors</div>
+                    </div>
+                    <div class="p-3 bg-navy-light/60 rounded-xl border border-white/5">
+                        <div class="text-2xl font-bold text-white">2-20</div>
+                        <div class="text-[11px] text-slate-400 uppercase font-semibold">Players</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Designed for safe, tailored fun. Pick your age group, customize your bottle, and let fate decide who completes the challenge!
+                </p>
+            </div>
+
+            <button onclick="switchScreen('setupScreen')" class="w-full max-w-md bg-cherry hover:bg-cherry-hover text-white text-xl font-black py-4 rounded-xl shadow-xl transform active:scale-95 transition-all border-b-4 border-cherry-hover uppercase tracking-wider">
+                Start Game Setup
+            </button>
+        </section>
+
+        <!-- 2. SETUP SCREEN -->
+        <section id="setupScreen" class="hidden w-full max-w-2xl bg-white text-navy rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+            <div class="border-b border-slate-200 pb-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-black text-navy uppercase">Game Configuration</h2>
+                    <p class="text-xs text-slate-500">Tailor your game experience before spinning</p>
+                </div>
+                <span class="text-xs font-bold text-gold bg-navy px-3 py-1 rounded-full uppercase">Step 1 of 3</span>
+            </div>
+
+            <!-- Game Name Input -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-navy uppercase tracking-wider">Game Title</label>
+                <input type="text" id="gameTitleInput" value="DO OR DIE" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-navy focus:outline-none font-bold text-navy transition" placeholder="Enter custom game title">
+            </div>
+
+            <!-- Age Sector -->
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-navy uppercase tracking-wider">Select Age Sector</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="selectAgeSector('children')" id="sectorBtn_children" class="sector-btn py-3 px-2 rounded-xl border-2 border-slate-200 text-center transition flex flex-col items-center gap-1">
+                        <span class="text-xl">🎈</span>
+                        <span class="text-xs font-black uppercase">Children</span>
+                        <span class="text-[10px] text-slate-400">Safe & Silly</span>
+                    </button>
+                    <button type="button" onclick="selectAgeSector('teenagers')" id="sectorBtn_teenagers" class="sector-btn py-3 px-2 rounded-xl border-2 border-slate-200 text-center transition flex flex-col items-center gap-1">
+                        <span class="text-xl">🎧</span>
+                        <span class="text-xs font-black uppercase">Teenagers</span>
+                        <span class="text-[10px] text-slate-400">Social Fun</span>
+                    </button>
+                    <button type="button" onclick="selectAgeSector('adults')" id="sectorBtn_adults" class="sector-btn py-3 px-2 rounded-xl border-2 border-slate-200 text-center transition flex flex-col items-center gap-1">
+                        <span class="text-xl">🔥</span>
+                        <span class="text-xs font-black uppercase">Adults</span>
+                        <span class="text-[10px] text-slate-400">Flirty & Bold</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Player Count Slider -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs font-bold text-navy uppercase tracking-wider">Number of Players</label>
+                    <span id="playerCountDisplay" class="text-lg font-black text-cherry bg-cherry/10 px-3 py-0.5 rounded-lg">4 Players</span>
+                </div>
+                <input type="range" id="playerCountSlider" min="2" max="20" value="4" oninput="updatePlayerFields(this.value)" class="w-full accent-navy h-2 bg-slate-200 rounded-lg cursor-pointer">
+            </div>
+
+            <!-- Player Names Grid -->
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-navy uppercase tracking-wider">Player Names</label>
+                <div id="playerInputsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1">
+                    <!-- Dynamic inputs populated via JS -->
+                </div>
+                <div id="validationError" class="hidden text-xs text-cherry font-bold bg-cherry/10 p-2 rounded-lg text-center"></div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-2 flex gap-3">
+                <button onclick="switchScreen('welcomeScreen')" class="w-1/3 py-3 rounded-xl border-2 border-slate-200 font-bold text-slate-600 hover:bg-slate-100 transition">Back</button>
+                <button onclick="validateAndGoToBottle()" class="w-2/3 py-3 rounded-xl bg-navy text-white font-black hover:bg-navy-light transition shadow-lg uppercase tracking-wider">Next: Select Bottle</button>
+            </div>
+        </section>
+
+        <!-- 3. BOTTLE SELECTION SCREEN -->
+        <section id="bottleScreen" class="hidden w-full max-w-2xl bg-white text-navy rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+            <div class="border-b border-slate-200 pb-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-black text-navy uppercase">Choose Your Bottle</h2>
+                    <p class="text-xs text-slate-500">Pick a game token bottle to spin in the arena</p>
+                </div>
+                <span class="text-xs font-bold text-gold bg-navy px-3 py-1 rounded-full uppercase">Step 2 of 3</span>
+            </div>
+
+            <div id="bottleGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-3 max-h-80 overflow-y-auto p-1">
+                <!-- Dynamically populated bottle choices -->
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center gap-3">
+                <div id="selectedBottleIcon" class="text-4xl">🍾</div>
+                <div>
+                    <h4 id="selectedBottleTitle" class="font-bold text-sm text-navy">Default Bottle</h4>
+                    <p id="selectedBottleDesc" class="text-xs text-slate-500">Select any token style above.</p>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-2 flex gap-3">
+                <button onclick="switchScreen('setupScreen')" class="w-1/3 py-3 rounded-xl border-2 border-slate-200 font-bold text-slate-600 hover:bg-slate-100 transition">Back</button>
+                <button onclick="startGame()" class="w-2/3 py-4 rounded-xl bg-cherry hover:bg-cherry-hover text-white text-lg font-black transition shadow-xl uppercase tracking-wider border-b-4 border-cherry-hover">
+                    LET'S DIE
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. MAIN GAMEPLAY / SPINNING ARENA SCREEN -->
+        <section id="gameArenaScreen" class="hidden w-full flex flex-col items-center space-y-6">
+            <!-- Game Info Header -->
+            <div class="w-full bg-navy-light/90 border border-white/10 rounded-2xl p-4 flex justify-between items-center text-xs">
+                <div>
+                    <span class="text-slate-400 block uppercase text-[10px] font-bold">Round</span>
+                    <span id="currentRoundDisplay" class="font-extrabold text-gold text-lg">1</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 block uppercase text-[10px] font-bold">Sector</span>
+                    <span id="activeSectorDisplay" class="font-extrabold text-white bg-cherry/80 px-2.5 py-0.5 rounded-full text-[11px] uppercase">ADULTS</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-slate-400 block uppercase text-[10px] font-bold">Leading</span>
+                    <span id="leadingPlayerDisplay" class="font-extrabold text-gold text-sm">Player 1</span>
+                </div>
+            </div>
+
+            <!-- Spin Area -->
+            <div class="relative w-72 h-72 md:w-80 md:h-80 flex items-center justify-center bg-navy-dark/60 rounded-full border-4 border-navy-light/60 shadow-2xl overflow-hidden my-4">
+                <!-- Circle layout of players around the bottle -->
+                <div id="playerRing" class="absolute inset-0 w-full h-full pointer-events-none"></div>
+
+                <!-- Spinning Bottle Token -->
+                <div id="bottleContainer" class="relative z-10 w-24 h-24 md:w-28 md:h-28 flex items-center justify-center transition-transform">
+                    <div id="bottleVisual" class="text-6xl md:text-7xl transform -rotate-45 bottle-shadow select-none">
+                        🍾
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spin Action Button -->
+            <div class="w-full max-w-sm text-center space-y-2">
+                <button id="spinBtn" onclick="spinBottle()" class="w-full bg-gold hover:bg-gold-light text-navy text-xl font-black py-4 rounded-2xl shadow-xl transform active:scale-95 transition-all uppercase tracking-wider border-b-4 border-gold-dark">
+                    SPIN THE BOTTLE
+                </button>
+                <p id="spinStatusText" class="text-xs text-slate-400 font-semibold h-4">Tap to pick the next player randomly!</p>
+            </div>
+        </section>
+
+        <!-- 5. CHALLENGE CARD MODAL / SCREEN -->
+        <section id="challengeModal" class="hidden fixed inset-0 z-50 bg-navy-dark/95 backdrop-blur-md p-4 flex items-center justify-center">
+            <div class="w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 shadow-2xl text-navy space-y-6 border-4 border-gold relative animate-fade-in">
+
+                <!-- Player Header -->
+                <div class="text-center space-y-1">
+                    <span id="promptTypeBadge" class="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest text-white bg-cherry">
+                        TRUTH
+                    </span>
+                    <h3 id="selectedPlayerName" class="text-2xl md:text-3xl font-black text-navy uppercase tracking-tight">
+                        Alex
+                    </h3>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">It's your turn to choose fate!</p>
+                </div>
+
+                <!-- Prompt Content Box -->
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 text-center min-h-[160px] flex items-center justify-center">
+                    <p id="promptText" class="text-lg md:text-xl font-bold text-navy leading-relaxed">
+                        Loading challenge...
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2">
+                    <button onclick="handlePromptAction('complete')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-md transition flex items-center justify-center gap-2 uppercase tracking-wider text-sm">
+                        <span>✓</span> YES — COMPLETED (+10 pts)
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="handlePromptAction('fail')" class="py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold rounded-xl transition text-xs uppercase">
+                            ✕ NOT COMPLETED (0 pts)
+                        </button>
+                        <button onclick="handlePromptAction('pass')" class="py-3 bg-amber-100 hover:bg-amber-200 text-amber-800 font-extrabold rounded-xl transition text-xs uppercase">
+                            ⏭ PASS / SKIP (0 pts)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. SCOREBOARD MODAL -->
+        <section id="scoreboardModal" class="hidden fixed inset-0 z-50 bg-navy-dark/90 backdrop-blur-sm p-4 flex items-center justify-center">
+            <div class="w-full max-w-md bg-navy-light border border-white/20 text-white rounded-3xl p-6 shadow-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                    <h3 class="text-xl font-black gold-gradient-text uppercase">Live Scoreboard</h3>
+                    <button onclick="toggleScoreboardModal(false)" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+                </div>
+
+                <div id="liveLeaderboardList" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                    <!-- Dynamic scoreboard items -->
+                </div>
+
+                <button onclick="toggleScoreboardModal(false)" class="w-full py-3 bg-white/10 hover:bg-white/20 font-bold rounded-xl text-xs uppercase tracking-wider">
+                    Close Scoreboard
+                </button>
+            </div>
+        </section>
+
+        <!-- 7. FINAL RESULTS SCREEN -->
+        <section id="resultsScreen" class="hidden w-full max-w-2xl bg-white text-navy rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="text-5xl">🏆</div>
+                <h2 class="text-3xl font-black text-navy uppercase">Game Over & Final Results</h2>
+                <p id="winnerAnnouncement" class="text-base font-bold text-gold-dark bg-gold/10 py-2 px-4 rounded-xl border border-gold/30">
+                    Winner: Player 1!
+                </p>
+            </div>
+
+            <!-- Final Rankings List -->
+            <div class="space-y-3">
+                <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider">Final Standings</h4>
+                <div id="finalRankingsList" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Play Again Actions -->
+            <div class="pt-2 grid grid-cols-2 gap-3">
+                <button onclick="restartGameSamePlayers()" class="py-3.5 rounded-xl bg-navy text-white font-black hover:bg-navy-light transition shadow-lg text-xs uppercase tracking-wider">
+                    Play Again (Same Players)
+                </button>
+                <button onclick="switchScreen('setupScreen')" class="py-3.5 rounded-xl bg-cherry text-white font-black hover:bg-cherry-hover transition shadow-lg text-xs uppercase tracking-wider">
+                    Return to Setup
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-[11px] text-slate-500 border-t border-white/5">
+        DO OR DIE — Pure Party Game Engine. Safe, Consent-First & Fully Standalone.
+    </footer>
+
+    <!-- JAVASCRIPT GAME ENGINE AND QUESTIONS DATABASE -->
+    <script>
+        /* ==========================================================================
+           1. QUESTION DATABASE ENGINE (600 UNIQUE PROMPTS)
+           ========================================================================== */
+        const QUESTION_DATABASE = {
+            children: {
+                truth: [
+                    "What is your absolute favorite cartoon show?", "What is something that always makes you laugh out loud?", "What is your favorite food to eat on your birthday?", "What is one cool skill you really want to learn?", "Who is your favorite fictional superhero or character?",
+                    "What is the funniest face you can make in the mirror?", "What is your favorite subject or activity at school?", "If you had a pet dragon, what would you name it?", "What is the best dream you have ever had?", "What makes you feel super happy when you are sad?",
+                    "What is your favorite flavor of ice cream?", "What is the most fun game you have ever played?", "If you could turn into any animal for a day, which one?", "What toy could you play with all day long?", "What is your favorite thing to do on weekends?",
+                    "What is the silly nickname your family calls you?", "What sound does your favorite animal make?", "If you could fly anywhere right now, where would you go?", "What is your favorite color and why?", "What is your favorite joke to tell?",
+                    "What is the funniest thing a pet has ever done?", "What is your favorite holiday of the year?", "If you were a famous chef, what would you bake?", "What is your favorite book or bedtime story?", "What is the best trick you know how to do?",
+                    "What would you do if you found a magic wand?", "What is your favorite thing about your best friend?", "What is your favorite game to play outdoors?", "What is the funniest word you know?", "What season of the year do you like most?",
+                    "If you lived in a castle, what would be inside?", "What is your favorite movie character sound effect?", "What is something you are really good at doing?", "What is your favorite vegetable or fruit?", "What would your dream playground look like?",
+                    "What is your favorite dance move called?", "What makes you feel super brave?", "If you could make up a new rule for your house, what is it?", "What is your favorite song to sing aloud?", "What animal do you think is the cutest?",
+                    "What is your favorite thing to do on a rainy day?", "If you could eat dessert for dinner, what would it be?", "What is your favorite outfit to wear?", "What is the most magical thing you can imagine?", "What is your favorite sports game to watch or play?",
+                    "If you had three wishes, what would the first be?", "What is something funny you did when you were younger?", "What place in your house is your favorite hiding spot?", "What is your favorite kind of weather?", "What craft or drawing do you love to make?",
+                    "What would your superhero costume look like?", "What is your favorite smell in the whole world?", "What animal would you love to talk to if it could talk?", "What is your favorite family tradition?", "What is the coolest thing you saw this week?",
+                    "What is your favorite game to play with cards or boards?", "If you could create a new flavor of ice cream, what is in it?", "What is your favorite sound in nature?", "What is something nice you did for someone recently?", "What is your favorite bedtime story?",
+                    "What would you build with a million plastic building blocks?", "What is the funniest outfit you ever wore?", "What is your favorite thing to build out of sand?", "What is your favorite trick to play on a friend?", "What is your favorite space planet?",
+                    "What is your favorite song from a movie?", "What is your favorite kind of breakfast?", "What make-believe character do you wish was real?", "What is your favorite place to visit locally?", "What is your favorite game on a playground?",
+                    "What is your favorite kind of cookie?", "What would you name your own robot helper?", "What is your favorite piece of clothing?", "What is the funniest face your friend makes?", "What is your favorite fruit juice?",
+                    "What sport do you think is the most fun?", "What is your favorite art color to draw with?", "What animal move can you imitate best?", "What is your favorite mystery or puzzle game?", "What is your favorite sea creature?",
+                    "What is your favorite bedtime stuffed animal?", "What is your favorite thing to do at a birthday party?", "What makes your school teacher awesome?", "What is your favorite thing to collect?", "What is your favorite game to play in the snow or water?",
+                    "What is your favorite silly dance song?", "What is your favorite breakfast cereal?", "What is the most fun ride at an amusement park?", "What is your favorite kind of pet?", "What is your favorite thing about yourself?",
+                    "What is your favorite thing to do with your family?", "What is your favorite zoo animal to watch?", "What is your favorite storybook picture?", "What is your favorite fruit smoothie flavor?", "What is your favorite funny joke?",
+                    "What would your dream treehouse look like?", "What is your favorite game on a tablet or screen?", "What makes a good friend?", "What is your favorite memory from this year?", "What is your ultimate dream birthday gift?"
+                ],
+                dare: [
+                    "Make your funniest silly face for 10 seconds.", "Dance like a robot for 15 seconds.", "Pretend to be a roaring lion for 10 seconds.", "Sing a few lines of your favorite cartoon song.", "Do 5 enthusiastic jumping jacks right now.",
+                    "Wiggle your ears or nose without using hands.", "Walk like a waddling penguin across the room.", "Speak in a silly alien voice for the next turn.", "Pretend you are driving a fast racecar with sound effects.", "Do your best impression of a happy puppy.",
+                    "Spin around gently 3 times and strike a superhero pose.", "Pretend to be a statue for 15 seconds without moving.", "Meow like a cat 3 times loudly.", "Try to juggle 2 soft items for 10 seconds.", "Act like a monkey eating a banana.",
+                    "Tell your favorite squeaky joke to the group.", "High-five everyone in the room as fast as you can.", "Pretend to play an invisible electric guitar for 15 seconds.", "Walk backwards across the room carefully.", "Pretend to be a sleepy sloth waking up.",
+                    "Give yourself a huge hug and say 'I am awesome!'", "Hop on one foot 5 times in a row.", "Whisper your next sentence like a secret agent.", "Pretend to conduct an orchestra with big hand movements.", "Make a funny sound effect every time someone says your name for 2 rounds.",
+                    "Pretend to be a frog hopping 3 times.", "Do a funny mini runway walk across the room.", "Pretend you are floating in zero gravity space.", "Quack like a duck 4 times.", "Balance a small book on your head for 10 seconds.",
+                    "Pretend to play the drums on your knees.", "Make a silly monster roar and shake your hands.", "Pretend you are a chef mixing a huge cake batter.", "Flap your arms and pretend to be a soaring eagle.", "Do your best robot dance move.",
+                    "Pretend to swim across the ocean through the air.", "Say 'Boing!' every time you take a step for 10 seconds.", "Make up a 5-second silly dance and repeat it twice.", "Pretend to dig for pirate treasure with an invisible shovel.", "Wave to everyone like you are royalty on a float.",
+                    "Pretend to be a buzzing bumblebee looking for flowers.", "Nod your head and smile super wide for 10 seconds.", "Pretend to eat hot soup that is way too warm.", "Pretend you are blowing up a gigantic invisible balloon until it pops.", "Pretend to walk on a tightrope carefully.",
+                    "Do a slow-motion running high-knee action for 10 seconds.", "Pretend to be a sleepy bear snoring gently.", "Count to 10 in your most dramatic wizard voice.", "Pretend you are a popcorn kernel popping in the pan.", "Give a thumbs-up to everyone in the group.",
+                    "Pretend to blow out 100 birthday candles in one breath.", "Pretend to be an astronaut stepping onto the moon.", "Make 3 different silly animal sounds in a row.", "Pretend you are a speed skater gliding on ice.", "Pretend to search for lost keys in your pocket in fast-forward.",
+                    "Do 3 gentle star jumps while smiling.", "Pretend to be a conductor on a roaring train.", "Make up a funny 3-word slogan for yourself.", "Pretend to be a butterfly flapping delicate wings.", "Pretend to ride a bumpy horse across the room.",
+                    "Clap out a rhythmic beat and ask someone to copy it.", "Pretend to put on gigantic winter boots and stomp around.", "Pretend to brush an elephant's teeth with a giant brush.", "Pretend to fly like a superhero superhero-landing.", "Pretend to be a clock ticking tick-tock with your head.",
+                    "Say 'Abracadabra!' with dramatic hand motions.", "Pretend to eat a sour lemon and react.", "Pretend to catch a big fish and reel it in.", "Pretend to skate on ice gracefully.", "Pretend to be a racecar revving its engine.",
+                    "Do a gentle bow or curtsy to the group.", "Pretend to walk through thick sticky mud.", "Pretend to hold a tiny baby bird gently.", "Pretend to play a tiny ukulele.", "Pretend you are blowing giant bubbles with a wand.",
+                    "Pretend to be an owl hooting at night.", "Pretend you are walking in heavy wind.", "Pretend to play basketball and make a slam dunk.", "Pretend to be a slow turtle creeping forward.", "Pretend to cast a levitation spell on your shoe.",
+                    "Pretend to drive a giant bulldozer.", "Pretend you are a seal clapping flippers.", "Pretend to be a detective inspecting the floor with a magnifying glass.", "Pretend to be an ice cream cone melting slowly.", "Pretend to climb a tall ladder to the sky.",
+                    "Pretend to be a firefighter spraying a hose.", "Pretend to play a saxophone solo.", "Pretend you are an alarm clock going off.", "Pretend to be a crab walking sideways.", "Pretend to juggle invisible fiery torches safely.",
+                    "Pretend to be a dolphin leaping out of water.", "Pretend to ice a giant imaginary cupcake.", "Pretend to be a happy hamster running on a wheel.", "Pretend to build a snowman out of air.", "Pretend to be a kangaroo hopping 3 times.",
+                    "Pretend you are a superhero putting on a cape.", "Pretend to steer a giant pirate ship wheel.", "Pretend to be a train engine chugging along.", "Pretend to catch a golden snitch or magical butterfly.", "Give a big high five to the player on your right!"
+                ]
+            },
+            teenagers: {
+                truth: [
+                    "What is the most embarrassing funny moment you can comfortably share?", "Who in your life currently makes you laugh the hardest?", "What quality do you admire most in a true friend?", "What is a harmless secret talent you have that few people know?", "What kind of compliment always makes you feel genuine happiness?",
+                    "What is your biggest minor pet peeve in daily life?", "What song do you secretly love listening to when nobody is around?", "If you could trade lives with any character for a week, who?", "What was your most memorable moment from school this year?", "What is an aesthetic or fashion style you love but haven't tried?",
+                    "What is the funniest text message you have received recently?", "What is your ultimate comfort snack during study sessions?", "If you had an unlimited shopping spree for 1 hour, where first?", "What subject or hobby could you talk about for hours?", "What is a funny misunderstanding you recently experienced?",
+                    "What is your absolute favorite game or app on your phone?", "Who is your celebrity crush or favorite public role model?", "What is a trend you thought was silly but ended up liking?", "What is something kind a friend did for you that you never forgot?", "What is your favorite meme or viral video of all time?",
+                    "What is a goal you hope to achieve by the end of this year?", "If you could form a band, what role would you play?", "What is your favorite movie or show to rewatch endlessly?", "What is a habit you wish you could build easily?", "What is the funniest nickname you have ever been given?",
+                    "What is your favorite place to hang out with friends?", "What is something that instantly puts you in a good mood?", "If you could master any language instantly, which one?", "What is your favorite memory from a road trip or vacation?", "What is a harmless mystery you wish you knew the answer to?",
+                    "What is your favorite dish your family makes?", "What is the best piece of advice a friend gave you?", "If you could create a new viral trend, what would it be?", "What is your favorite genre of music right now?", "What is something you used to dislike but now enjoy?",
+                    "What is your favorite way to unwind after a long day?", "If you could possess any magical power, what would it be?", "What is the coolest gift you have ever given someone?", "What is your favorite board game or card game to play?", "What is a dream career you have considered?",
+                    "What is your favorite quote or lyric that inspires you?", "What is a funny fear you had when you were younger?", "What is the best compliment you ever received from a peer?", "If you could travel anywhere next summer, where?", "What is your favorite thing about your best friend?",
+                    "What is a movie that actually made you cry or feel deeply?", "What is your favorite snack to sneak into a cinema?", "What is a skill you picked up entirely by watching online videos?", "If you were stranded on an island with 3 items, what are they?", "What is your favorite memory with this group right now?",
+                    "What is the funniest nickname in your contacts list?", "What is a book or story that really stayed with you?", "What is your favorite indoor weekend activity?", "What is a funny dream you remember vividly?", "If you could host a podcast, what topic would it be on?",
+                    "What is a style trend from the past you wish would return?", "What is your favorite sport or activity to participate in?", "What is something silly you are very competitive about?", "If you could design your dream bedroom, what is in it?", "What is your favorite thing about social media or technology?",
+                    "What is a habit that always makes you smile when you see it?", "What is your favorite video game memory?", "What is something thoughtful you love doing for others?", "What is your favorite type of weather for hanging out?", "What is a food combination you love that others find weird?",
+                    "What is your favorite memory from a party or gathering?", "What is a random fact you know that always surprises people?", "What is your favorite place to shop or browse?", "What is something you feel super passionate about right now?", "If you could curate a festival lineup, who headlines?",
+                    "What is your favorite way to express your creativity?", "What is a hilarious joke that always lands?", "What is something new you tried this year that you loved?", "What is your favorite seasonal activity?", "What is a lesson you learned the hard way recently?",
+                    "What is your favorite dance challenge or music beat?", "What is a movie you think everyone should see at least once?", "What is your favorite thing to do on a sunny afternoon?", "If you could design an app, what problem would it solve?", "What is a memory that always makes you laugh out loud?",
+                    "What is your favorite feature of your personality?", "What is a subject you find surprisingly fascinating?", "What is your favorite ice cream topping combo?", "What is a tradition with your friends you cherish?", "What is something you are really looking forward to?",
+                    "What is your favorite kind of art or design?", "What is a phrase you find yourself saying all the time?", "What is your favorite souvenir from a travel experience?", "What is a funny reaction you had to a jump scare?", "What is your favorite sound in daily life?",
+                    "What is a small victory you celebrated recently?", "What is your favorite outdoor spot in your city?", "What is a challenge you overcame that made you proud?", "What is your favorite type of comedy?", "What is something cool you learned this week?",
+                    "What is your favorite thing about hosting or attending parties?", "What is a game you used to love as a younger kid?", "What is your favorite style of footwear?", "What is a harmless prank you found hilarious?", "What is your ultimate goal for personal growth this year?"
+                ],
+                dare: [
+                    "Give someone in the group a genuine, thoughtful compliment.", "Perform a dramatic 15-second movie scene impression.", "Deliver a funny 15-second motivational speech to the room.", "Do your best impression of a famous celebrity or character.", "Speak in a crisp British accent for the next 2 turns.",
+                    "Show the group the 3rd most recent photo in your camera roll.", "Do a 20-second dramatic catwalk across the room.", "Sing the chorus of your current favorite song with full passion.", "Let the group pick a harmless new profile picture for 10 minutes.", "Try to make the person to your left laugh without touching them.",
+                    "Do 10 smooth push-ups or air squats right now.", "Talk in slow-motion voice for the next minute.", "Nod enthusiastically at everything said for 1 round.", "Perform a 10-second air guitar solo with full facial expressions.", "Say something nice about every player in the game.",
+                    "Pretend to be a news anchor reporting breaking news on the game.", "Do a 15-second dance move of your own creation.", "Recite a funny poem on the spot about a random object in the room.", "Hold a serious staring contest with the player opposite you for 15s.", "Pretend you are an opera singer announcing what you will do next.",
+                    "Do a impression of a famous cartoon character.", "Whisper your next comment like it's an intense movie trailer line.", "Pretend to be a fitness instructor leading a 10-second stretch.", "Deliver a 15-second pitch for a completely useless product.", "Show your best signature dance move to the group.",
+                    "Pretend you are a flight attendant giving safety instructions.", "Talk using only questions for the next full round.", "Pretend to be an art critic analyzing a plain wall.", "Do 5 enthusiastic high-fives with imaginary friends.", "Pretend you just won a huge award and give a 15-second speech.",
+                    "Imitate the sound of 3 different musical instruments.", "Pretend to be a radio DJ introducing the next song.", "Do your best dramatic villain laugh.", "Walk like a runway model while carrying an imaginary tea cup.", "Pretend you are in a silent movie for 20 seconds.",
+                    "Recite the alphabet backward as far as you can in 15 seconds.", "Pretend to be a mime trapped in a glass box for 10 seconds.", "Perform a mini magic trick using an imaginary prop.", "Give a 15-second review of your current seat.", "Pretend to be an auctioneer selling a shoe in fast speech.",
+                    "Speak in a Shakespearean theatrical tone for 2 turns.", "Pretend you are a robot running low on battery.", "Do 10 jumping jacks while spelling your name aloud.", "Pretend to be a sportscaster commenting on someone drinking water.", "Balance a ruler or pencil on your finger for 10 seconds.",
+                    "Imitate a famous video game victory dance.", "Pretend to be a tour guide explaining the history of the room.", "Say 3 nice things about the person on your right.", "Pretend to be a chef describing an imaginary gourmet dish.", "Do a dramatic gasp every time someone speaks for 1 round.",
+                    "Pretend to be a weather reporter caught in a storm.", "Speak like a medieval knight for 2 turns.", "Pretend to be a time traveler amazed by a modern phone.", "Do a 10-second impression of a statue coming to life.", "Pretend to be a fast-talking infomercial host.",
+                    "Demonstrate your favorite stretch or yoga pose.", "Pretend to be a detective discovering a subtle clue.", "Imitate the sound of a sports car shifting gears.", "Pretend you are a monarch greeting your subjects.", "Do a dramatic slow-motion applause.",
+                    "Pretend to be a radio host taking a caller.", "Sing a line of a song as if you were underwater.", "Pretend you are a superhero explaining your origin story.", "Do a 10-second pantomime of making a sandwich.", "Pretend to be a movie director shouting instructions.",
+                    "Give a thumbs up and a big smile to every camera or person.", "Pretend to be a penguin navigating ice.", "Imitate the ringtone of a vintage phone.", "Pretend to be an announcer at a boxing match.", "Do a mini victory lap around the room.",
+                    "Pretend you are reading an intense dramatic monologue.", "Perform a funny handshake with the player next to you.", "Pretend to be a gaming streamer reacting to a win.", "Imitate a classic sci-fi sound effect.", "Pretend to be a judge scoring a dance competition.",
+                    "Give a 10-second commentary on your own outfit.", "Pretend you are a secret agent talking into your watch.", "Imitate the sound of rain falling on a roof.", "Pretend to be a barista taking a complex order.", "Do a mini dramatic bow after your next sentence.",
+                    "Pretend to be a famous philosopher answering a simple question.", "Imitate a classical violin performance.", "Pretend you are an astronaut floating in space.", "Perform a quick 5-second rhythmic beatbox.", "Pretend to be a coach giving a halftime pep talk.",
+                    "Speak like an old-school noir detective.", "Pretend to be a waiter describing today's specials.", "Imitate a foghorn or ship horn sound.", "Pretend you are a red-carpet photographer taking photos.", "Do a graceful pirouette or spin.",
+                    "Pretend to be a nature documentary host describing the room.", "Imitate a roaring campfire sound effect.", "Pretend you are a conductor leading a choir.", "Perform a quick funny bow.", "Pretend to be a security guard checking passes.",
+                    "Give a 10-second cheer for the whole group.", "Pretend to be an archeologist discovering a relic.", "Imitate the sound of wind whistling.", "Pretend you are a royal guard standing at attention.", "High-five the player on your left with dramatic enthusiasm!"
+                ]
+            },
+            adults: {
+                truth: [
+                    "What kind of sincere compliment instantly makes you blush?", "What is your idea of an ideal, memorable romantic evening?", "Have you ever had a crush that completely caught you by surprise?", "What romantic gesture would make you smile instantly?", "What is something charming that makes someone immediately attractive?",
+                    "What is the boldest harmless thing you have done to impress someone?", "What is a playful question you would be shy to answer in front of friends?", "What quality do you find most intriguing in a partner?", "What was your very first romantic crush like?", "What is a song that always puts you in a romantic or upbeat mood?",
+                    "What is your favorite attribute about your own personality?", "What is a flirty line or compliment you secretly love hearing?", "What is the most memorable date idea you have ever experienced or dreamed of?", "What is something subtle that you find effortlessly magnetic?", "What is a harmless secret talent you love to show off?",
+                    "What is a romantic movie trope you secretly adore?", "What is the best date night meal or atmosphere in your opinion?", "What is something charmingly quirky about you?", "What is a compliment you received that stayed with you for years?", "What is your favorite memory of a romantic spark?",
+                    "What is something that instantly makes you feel confident?", "What is a playful trait you appreciate in a close companion?", "What is your favorite style of date night attire?", "What is a romantic location you dream of visiting with a partner?", "What is a flirty glance or gesture that always works on you?",
+                    "What is a quality in a person that makes you feel instantly comfortable?", "What is the most thoughtful gesture someone has ever made for you?", "What is a fun adventure you'd love to share with a special someone?", "What is a lighthearted confession you can share with the room?", "What is your favorite way to show appreciation to someone you care about?",
+                    "What is something playful that always makes you laugh during a date?", "What is a romantic playlist song you love?", "What is a trait you find endearing in someone you admire?", "What is a charming habit you notice in people?", "What is your favorite type of romantic comedy or drama?",
+                    "What is a fun, flirty challenge you find exciting?", "What is a thoughtful surprise you loved giving?", "What is an unforgettable compliment you gave someone else?", "What is your favorite romantic getaway concept?", "What is a subtle look that conveys a thousand words?",
+                    "What is a quality that makes a relationship feel effortless?", "What is your favorite date night dessert to share?", "What is a playful joke that always breaks the ice?", "What is something romantic you find underrated?", "What is a sweet memory that makes you smile when you think of it?",
+                    "What is a style or look that you find stunning?", "What is a fun question you love asking on a first date?", "What is your favorite way to spend a cozy evening?", "What is a charming line from a movie that you love?", "What is something that makes a conversation feel electric?",
+                    "What is a quality you bring to any great relationship?", "What is a favorite memory of a moonlit walk or evening out?", "What is something flirty you would write in a sweet note?", "What is a date activity that brings out your competitive side?", "What is a trait that makes someone an amazing communicator?",
+                    "What is a favorite romantic scent or cologne/perfume vibe?", "What is a sweet habit you appreciate in a partner?", "What is a romantic dream destination on your bucket list?", "What is a compliment that makes you feel deeply valued?", "What is something fun you love doing on a weekend night?",
+                    "What is a playful nickname you find cute?", "What is a quality that makes someone unforgettable?", "What is a subtle gesture of care that means the world to you?", "What is a favorite romantic memory from a trip?", "What is something adventurous you'd try with a partner?",
+                    "What is a charming icebreaker you think actually works?", "What is a song lyric that perfectly captures romance for you?", "What is something charmingly romantic you've seen in real life?", "What is a favorite romantic evening tradition?", "What is a quality that makes someone a great kisser in theory or practice?",
+                    "What is a fun date spot in your city you recommend?", "What is a trait that instantly brightens up a room?", "What is a sweet romantic gesture you love giving?", "What is a playful topic you love debating with friends?", "What is a favorite romantic scene from literature or film?",
+                    "What is something subtle that makes you feel admired?", "What is a fun memory of a late-night talk?", "What is a flirty comment that made you grin from ear to ear?", "What is a date idea that is totally unique?", "What is a quality that builds instant trust for you?",
+                    "What is a favorite slow-dance or relaxed song?", "What is a charming compliment you gave recently?", "What is a sweet way to start a morning together?", "What is a romantic gesture you think should never go out of style?", "What is a quality that makes a bond feel unbreakable?",
+                    "What is a date idea involving cooking or food that you love?", "What is something that makes a date feel extra special?", "What is a flirty text that would make you smile all day?", "What is a favorite memory of a surprise event?", "What is a trait that makes someone stand out in a crowd?",
+                    "What is a romantic evening vibe you love (beach, fireplace, rooftop)?", "What is something playful that keeps romance alive?", "What is a sweet gesture you find irresistible?", "What is a quality that makes a partner feel like a best friend?", "What is a favorite romantic poem or quote?",
+                    "What is something thoughtful you'd pack for a date picnic?", "What is a charming response to a great compliment?", "What is a date night activity that guarantees laughs?", "What is a quality that makes someone truly magnetic?", "What is your ultimate definition of a perfect date night?"
+                ],
+                dare: [
+                    "Deliver your most charming fictional pickup line with full confidence.", "Give a dramatic 10-second romantic movie performance.", "Describe your ideal date in 20 seconds with passion.", "Share a sincere compliment with someone who is comfortable receiving it.", "Perform a smooth 15-second slow-dance routine solo or with an imaginary partner.",
+                    "Whisper a hilarious or flirty secret to the person on your left.", "Wink effortlessly at 3 different players in the room.", "Give your best charming smile to the camera or room for 5 seconds.", "Blow a playful kiss to the group with high drama.", "Say the word 'darling' at the end of every sentence for 1 round.",
+                    "Perform a 10-second seductive runway walk with total humor.", "Demonstrate your best flirty wave across the room.", "Give a 15-second speech on why romance is an art form.", "Sing a line from a famous love ballad with deep emotion.", "Recite a short, romantic poem on the spot about coffee or tea.",
+                    "Propose to an imaginary royal with a ring made of air.", "Give a 10-second dramatic smolder look like a movie star.", "Describe your favorite romantic atmosphere with vivid details.", "Deliver a charming compliment to the player opposite you.", "Perform a mini theatrical bow like a romantic hero.",
+                    "Pretend you are in a French romance film for 15 seconds.", "Hold a flirty staring contest for 10 seconds with a willing player.", "Say 3 charming things about the person to your right.", "Demonstrate a dramatic 'heroic rescue' pose.", "Pretend to be a famous love doctor giving 10-second advice.",
+                    "Give a 10-second radio host intro for a late-night romance show.", "Do a dramatic slow-motion hair flip or gesture.", "Pretend to offer a single red rose to the group elegantly.", "Recite a cheesy love song chorus with a super serious face.", "Pretend to be a charming barista flirting over a latte.",
+                    "Give a dramatic 15-second monologue about lost love and victory.", "Do a graceful, elegant bow or curtsy.", "Whisper your next response like it's a deep romantic secret.", "Pretend you are serenading the room with an acoustic guitar.", "Deliver a classic movie romance line in your best voice.",
+                    "Pretend to be a romantic poet searching for the right rhyme.", "Give a 10-second Toast to Love and Friendship to the room.", "Demonstrate a classic tango step solo for 10 seconds.", "Pretend to write a sweet love letter on a scroll.", "Say a phrase in an accent of your choice to sound charming.",
+                    "Pretend you are walking on a moonlit beach in slow motion.", "Give a dramatic gasp and say 'You take my breath away!'", "Pretend to be a famous fashion designer complimenting someone's style.", "Deliver a passionate 10-second monologue about chocolate.", "Pretend to adjust your bowtie or necklace with classic charm.",
+                    "Hold a 5-second smoldering gaze into the camera or mirror.", "Pretend you are on a romantic gondola ride in Venice.", "Give a witty, flirty toast to the next turn.", "Pretend to catch a thrown rose with dramatic flair.", "Speak in a velvety smooth voice for the next 2 turns.",
+                    "Pretend to be a charming butler offering champagne.", "Deliver a 10-second romantic movie trailer narration.", "Pretend you are receiving a prestigious award for Best Partner.", "Demonstrate your best flirty chuckle or laugh.", "Pretend to waltz with a broom or imaginary partner for 10s.",
+                    "Say 'Magnifique!' with a French accent after every answer for 1 round.", "Pretend you are writing a love song on a piano.", "Give a dramatic hand-on-heart gesture while talking.", "Pretend to be a romantic fortune teller predicting love.", "Describe a dream sunset in 15 seconds.",
+                    "Pretend to offer a tiara or crown to the group.", "Do a 10-second charming ballroom dance step.", "Pretend you are in a classic black-and-white romance film.", "Give a suave tip-of-the-hat gesture to everyone.", "Deliver a line like a charming spy in a tuxedo/gown.",
+                    "Pretend to blow a golden kiss that floats across the room.", "Give a 10-second review of the game's romantic vibes.", "Pretend to serenade a houseplant or item in the room.", "Demonstrate how to strike a romantic pose on a red carpet.", "Pretend you are a love potion mixologist describing a drink.",
+                    "Speak in a romantic whisper for 1 round.", "Pretend to be a romantic novelist brainstorming a title.", "Give a suave 10-second compliment to the room.", "Pretend to catch someone's eye across a crowded room.", "Do a dramatic 5-second romantic spin.",
+                    "Pretend you are a knight receiving a favor before battle.", "Deliver a flirty line about the weather outside.", "Pretend to play a romantic violin melody.", "Give a charming nod to every player in sequence.", "Pretend you are at a high-society masquerade ball.",
+                    "Describe a romantic candlelit dinner menu in 15 seconds.", "Pretend to be a charming tour guide in Paris.", "Give a 10-second speech praising the beauty of laughter.", "Pretend to drop a handkerchief for someone to pick up.", "Do a dramatic bow to the leading player on the scoreboard.",
+                    "Pretend to be a romantic balladeer hitting a high note.", "Deliver a charming compliment to yourself with humor.", "Pretend you are stepping out of a luxury limousine.", "Give a 10-second pitch for a new romantic comedy movie.", "Pretend to be a poet inspired by the room's energy.",
+                    "Hold an elegant pose for 10 seconds while others guess it.", "Pretend to offer an umbrella to someone in an imaginary rainstorm.", "Give a suave wink and a smile to the room.", "Pretend you are a star in a romantic perfume commercial.", "High-five the player on your right with smooth romantic style!"
+                ]
+            }
+        };
+
+        const BOTTLE_OPTIONS = [
+            { id: 'chocolate_milk', name: 'Chocolate Milk', icon: '🧃', color: 'bg-amber-900', desc: 'Sweet, creamy, and classic.' },
+            { id: 'mango_milk', name: 'Mango Milk', icon: '🥭', color: 'bg-amber-500', desc: 'Tropical & refreshing blast.' },
+            { id: 'strawberry_milk', name: 'Strawberry Milk', icon: '🍓', color: 'bg-pink-500', desc: 'Pink berry goodness.' },
+            { id: 'vanilla_milk', name: 'Vanilla Milk', icon: '🥛', color: 'bg-slate-200', desc: 'Smooth vanilla delight.' },
+            { id: 'orange_juice', name: 'Orange Juice', icon: '🍊', color: 'bg-orange-500', desc: 'Citrus energy boost.' },
+            { id: 'lemonade', name: 'Lemonade', icon: '🍋', color: 'bg-yellow-400', desc: 'Tangy and sparkling sweet.' },
+            { id: 'cola', name: 'Sparkling Cola', icon: '🥤', color: 'bg-amber-950', desc: 'Fizzy party favorite.' },
+            { id: 'sparkling_water', name: 'Sparkling Water', icon: '🫧', color: 'bg-cyan-400', desc: 'Crisp & bubbly hydrator.' },
+            { id: 'mocktail', name: 'Fruity Mocktail', icon: '🍹', color: 'bg-rose-500', desc: 'Fancy non-alcoholic mix.' },
+            { id: 'golden_wine', name: 'Golden Wine Token', icon: '🍷', color: 'bg-purple-900', desc: 'Decorative adult game token.' }
+        ];
+
+        /* ==========================================================================
+           2. STATE MANAGEMENT & GAME LOGIC
+           ========================================================================== */
+        let gameState = {
+            title: 'DO OR DIE',
+            sector: 'adults', // children, teenagers, adults
+            players: [], // [{ id, name, score: 0, truthsDone: 0, daresDone: 0, passed: 0, failed: 0 }]
+            selectedBottle: BOTTLE_OPTIONS[0],
+            currentRound: 1,
+            activePlayerIndex: null,
+            isSpinning: false,
+            usedPrompts: {
+                children: { truth: [], dare: [] },
+                teenagers: { truth: [], dare: [] },
+                adults: { truth: [], dare: [] }
+            },
+            currentChallenge: null // { playerIndex, type: 'TRUTH'|'DARE', text: '' }
+        };
+
+        // Sound generator using Web Audio API (Standalone sound effects)
+        function playSound(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'spin') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    osc.frequency.setValueAtTime(600, ctx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(800, ctx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                }
+            } catch (e) {
+                // AudioContext fallback silently ignored
+            }
+        }
+
+        /* Initialize Setup UI */
+        window.onload = function() {
+            selectAgeSector('adults');
+            renderBottleGrid();
+            updatePlayerFields(4);
+        };
+
+        function switchScreen(screenId) {
+            playSound('click');
+            const screens = ['welcomeScreen', 'setupScreen', 'bottleScreen', 'gameArenaScreen', 'resultsScreen'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+
+            const headerActions = document.getElementById('headerActions');
+            if (screenId === 'gameArenaScreen') {
+                headerActions.classList.remove('hidden');
+            } else if (screenId === 'welcomeScreen' || screenId === 'setupScreen' || screenId === 'bottleScreen') {
+                headerActions.classList.add('hidden');
+            }
+        }
+
+        function selectAgeSector(sector) {
+            playSound('click');
+            gameState.sector = sector;
+            document.querySelectorAll('.sector-btn').forEach(btn => {
+                btn.classList.remove('border-navy', 'bg-navy/10', 'gold-border-glow');
+                btn.classList.add('border-slate-200');
+            });
+            const activeBtn = document.getElementById(`sectorBtn_${sector}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-slate-200');
+                activeBtn.classList.add('border-navy', 'bg-navy/10', 'gold-border-glow');
+            }
+        }
+
+        function updatePlayerFields(count) {
+            document.getElementById('playerCountDisplay').innerText = `${count} Players`;
+            const grid = document.getElementById('playerInputsGrid');
+
+            // Keep existing values if any
+            const existingValues = [];
+            grid.querySelectorAll('input').forEach(i => existingValues.push(i.value));
+
+            grid.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const val = existingValues[i] || `Player ${i + 1}`;
+                const div = document.createElement('div');
+                div.className = 'flex items-center space-x-2 bg-slate-50 p-2 rounded-xl border border-slate-200';
+                div.innerHTML = `
+                    <span class="text-xs font-black text-slate-400 w-6 text-center">#${i + 1}</span>
+                    <input type="text" value="${val}" class="player-name-input w-full bg-transparent text-xs font-bold text-navy focus:outline-none" placeholder="Player Name">
+                `;
+                grid.appendChild(div);
+            }
+        }
+
+        function validateAndGoToBottle() {
+            playSound('click');
+            const customTitle = document.getElementById('gameTitleInput').value.trim();
+            if (customTitle) {
+                gameState.title = customTitle;
+                document.getElementById('appTitleHeader').innerText = customTitle;
+            }
+
+            const inputs = document.querySelectorAll('.player-name-input');
+            const names = [];
+            let hasEmpty = false;
+
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (!val) hasEmpty = true;
+                names.push(val);
+            });
+
+            const errDiv = document.getElementById('validationError');
+            if (hasEmpty) {
+                errDiv.innerText = 'Please provide a name for all players!';
+                errDiv.classList.remove('hidden');
+                return;
+            }
+
+            // Check for duplicates
+            const uniqueNames = new Set(names.map(n => n.toLowerCase()));
+            if (uniqueNames.size !== names.length) {
+                errDiv.innerText = 'Player names must be unique! Duplicate found.';
+                errDiv.classList.remove('hidden');
+                return;
+            }
+
+            errDiv.classList.add('hidden');
+
+            // Save players
+            gameState.players = names.map((name, idx) => ({
+                id: idx,
+                name: name,
+                score: 0,
+                truthsDone: 0,
+                daresDone: 0,
+                passed: 0,
+                failed: 0
+            }));
+
+            switchScreen('bottleScreen');
+        }
+
+        function renderBottleGrid() {
+            const grid = document.getElementById('bottleGrid');
+            grid.innerHTML = '';
+            BOTTLE_OPTIONS.forEach((bottle, idx) => {
+                const isSelected = gameState.selectedBottle.id === bottle.id;
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-2xl border-2 cursor-pointer text-center transition flex flex-col items-center justify-center space-y-1 ${isSelected ? 'border-gold bg-gold/10 gold-border-glow' : 'border-slate-200 hover:border-navy'}`;
+                card.onclick = () => selectBottle(bottle);
+                card.innerHTML = `
+                    <div class="text-3xl">${bottle.icon}</div>
+                    <div class="text-[11px] font-black leading-tight text-navy">${bottle.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectBottle(bottle) {
+            playSound('click');
+            gameState.selectedBottle = bottle;
+            renderBottleGrid();
+            document.getElementById('selectedBottleIcon').innerText = bottle.icon;
+            document.getElementById('selectedBottleTitle').innerText = bottle.name;
+            document.getElementById('selectedBottleDesc').innerText = bottle.desc;
+            document.getElementById('bottleVisual').innerText = bottle.icon;
+        }
+
+        function startGame() {
+            playSound('click');
+            gameState.currentRound = 1;
+            gameState.activePlayerIndex = null;
+            gameState.usedPrompts = {
+                children: { truth: [], dare: [] },
+                teenagers: { truth: [], dare: [] },
+                adults: { truth: [], dare: [] }
+            };
+
+            // Reset scores
+            gameState.players.forEach(p => {
+                p.score = 0;
+                p.truthsDone = 0;
+                p.daresDone = 0;
+                p.passed = 0;
+                p.failed = 0;
+            });
+
+            document.getElementById('activeSectorDisplay').innerText = gameState.sector.toUpperCase();
+            document.getElementById('currentRoundDisplay').innerText = gameState.currentRound;
+
+            renderPlayerRing();
+            updateGameHeaderInfo();
+            switchScreen('gameArenaScreen');
+        }
+
+        function renderPlayerRing() {
+            const ring = document.getElementById('playerRing');
+            ring.innerHTML = '';
+            const total = gameState.players.length;
+            const radius = 110; // distance from center in px
+
+            gameState.players.forEach((player, idx) => {
+                const angle = (idx / total) * 2 * Math.PI - (Math.PI / 2); // Start at top
+                const x = Math.round(130 + radius * Math.cos(angle));
+                const y = Math.round(130 + radius * Math.sin(angle));
+
+                const tag = document.createElement('div');
+                tag.id = `playerTag_${idx}`;
+                tag.className = 'absolute transform -translate-x-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[10px] font-black bg-navy-light text-white border border-white/20 shadow-md transition-all duration-300';
+                tag.style.left = `${x}px`;
+                tag.style.top = `${y}px`;
+                tag.innerText = player.name;
+                ring.appendChild(tag);
+            });
+        }
+
+        function updateGameHeaderInfo() {
+            document.getElementById('currentRoundDisplay').innerText = gameState.currentRound;
+            const sorted = [...gameState.players].sort((a, b) => b.score - a.score);
+            const leader = sorted[0];
+            document.getElementById('leadingPlayerDisplay').innerText = `${leader.name} (${leader.score}p)`;
+
+            // Highlight leading player tag in ring
+            gameState.players.forEach((p, idx) => {
+                const tag = document.getElementById(`playerTag_${idx}`);
+                if (tag) {
+                    if (p.score > 0 && p.score === leader.score) {
+                        tag.classList.add('border-gold', 'text-gold', 'bg-navy-dark');
+                    } else {
+                        tag.classList.remove('border-gold', 'text-gold', 'bg-navy-dark');
+                    }
+                }
+            });
+        }
+
+        /* Spin Logic */
+        function spinBottle() {
+            if (gameState.isSpinning) return;
+            gameState.isSpinning = true;
+
+            playSound('spin');
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const bottleContainer = document.getElementById('bottleContainer');
+            bottleContainer.classList.add('spinning');
+
+            // Pick random next player
+            const total = gameState.players.length;
+            const chosenIdx = Math.floor(Math.random() * total);
+
+            // Calculate rotation angle to point to player
+            const playerAngleDeg = (chosenIdx / total) * 360;
+            // Extra full rotations (4 to 7 full spins + angle offset)
+            const extraSpins = (4 + Math.floor(Math.random() * 3)) * 360;
+            const totalRotation = extraSpins + playerAngleDeg + 45; // 45 deg correction for bottle visual angle
+
+            bottleContainer.style.transform = `rotate(${totalRotation}deg)`;
+
+            // Reset ring highlights
+            gameState.players.forEach((_, idx) => {
+                const tag = document.getElementById(`playerTag_${idx}`);
+                if (tag) tag.classList.remove('ring-2', 'ring-cherry', 'scale-110');
+            });
+
+            setTimeout(() => {
+                gameState.isSpinning = false;
+                spinBtn.disabled = false;
+                spinBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                gameState.activePlayerIndex = chosenIdx;
+
+                // Highlight chosen player tag
+                const activeTag = document.getElementById(`playerTag_${chosenIdx}`);
+                if (activeTag) activeTag.classList.add('ring-2', 'ring-cherry', 'scale-110');
+
+                // Trigger challenge creation
+                triggerChallenge(chosenIdx);
+
+                // Reset rotation cleanly without animation jump for next spin
+                setTimeout(() => {
+                    bottleContainer.classList.remove('spinning');
+                    bottleContainer.style.transform = `rotate(${totalRotation % 360}deg)`;
+                }, 500);
+
+            }, 3500);
+        }
+
+        function triggerChallenge(playerIdx) {
+            const player = gameState.players[playerIdx];
+
+            // 50/50 Random Truth or Dare
+            const isTruth = Math.random() < 0.5;
+            const promptType = isTruth ? 'truth' : 'fare';
+            const typeLabel = isTruth ? 'TRUTH' : 'DARE';
+
+            const sectorKey = gameState.sector;
+            const pool = QUESTION_DATABASE[sectorKey][isTruth ? 'truth' : 'dare'];
+            let usedList = gameState.usedPrompts[sectorKey][isTruth ? 'truth' : 'dare'];
+
+            // Refill pool if exhausted
+            if (usedList.length >= pool.length) {
+                usedList = [];
+                gameState.usedPrompts[sectorKey][isTruth ? 'truth' : 'dare'] = [];
+            }
+
+            // Find unused prompt
+            let available = pool.filter((_, idx) => !usedList.includes(idx));
+            const randomIdxInAvailable = Math.floor(Math.random() * available.length);
+            const chosenPromptText = available[randomIdxInAvailable];
+            const originalIndex = pool.indexOf(chosenPromptText);
+
+            // Mark as used
+            usedList.push(originalIndex);
+
+            gameState.currentChallenge = {
+                playerIndex: playerIdx,
+                type: typeLabel,
+                text: chosenPromptText
+            };
+
+            // Display in Modal
+            document.getElementById('selectedPlayerName').innerText = player.name;
+            const badge = document.getElementById('promptTypeBadge');
+            badge.innerText = typeLabel;
+            if (typeLabel === 'TRUTH') {
+                badge.className = 'inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest text-white bg-navy';
+            } else {
+                badge.className = 'inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest text-white bg-cherry';
+            }
+
+            document.getElementById('promptText').innerText = chosenPromptText;
+            document.getElementById('challengeModal').classList.remove('hidden');
+        }
+
+        function handlePromptAction(action) {
+            playSound('click');
+            const player = gameState.players[gameState.currentChallenge.playerIndex];
+            const type = gameState.currentChallenge.type;
+
+            if (action === 'complete') {
+                player.score += 10;
+                if (type === 'TRUTH') player.truthsDone++;
+                else player.daresDone++;
+                playSound('win');
+            } else if (action === 'fail') {
+                player.failed++;
+            } else if (action === 'pass') {
+                player.passed++;
+            }
+
+            // Increment round after all players have played once or per spin
+            gameState.currentRound++;
+
+            document.getElementById('challengeModal').classList.add('hidden');
+            updateGameHeaderInfo();
+        }
+
+        function toggleScoreboardModal(show) {
+            playSound('click');
+            const modal = document.getElementById('scoreboardModal');
+            if (show) {
+                renderLiveLeaderboard();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function renderLiveLeaderboard() {
+            const list = document.getElementById('liveLeaderboardList');
+            list.innerHTML = '';
+
+            const sorted = [...gameState.players].sort((a, b) => b.score - a.score);
+
+            sorted.forEach((player, rank) => {
+                const isLeader = rank === 0 && player.score > 0;
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-2xl flex justify-between items-center ${isLeader ? 'bg-gold/20 border border-gold' : 'bg-navy/60 border border-white/5'}`;
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs font-black ${isLeader ? 'text-gold' : 'text-slate-400'}">#${rank + 1}</span>
+                        <div>
+                            <div class="font-bold text-sm text-white flex items-center gap-1">
+                                ${player.name}
+                                ${isLeader ? '👑' : ''}
+                            </div>
+                            <div class="text-[10px] text-slate-400">
+                                Truths: ${player.truthsDone} | Dares: ${player.daresDone} | Passed: ${player.passed}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-lg font-black gold-gradient-text">
+                        ${player.score} pts
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function confirmEndGame() {
+            playSound('click');
+            if (confirm("Are you sure you want to end the current game and view final standings?")) {
+                showFinalResults();
+            }
+        }
+
+        function confirmExitToSetup() {
+            playSound('click');
+            if (confirm("Return to setup menu? Current game progress will be lost.")) {
+                switchScreen('setupScreen');
+            }
+        }
+
+        function showFinalResults() {
+            const sorted = [...gameState.players].sort((a, b) => b.score - a.score);
+            const topScore = sorted[0].score;
+            const winners = sorted.filter(p => p.score === topScore && p.score > 0);
+
+            const announcement = document.getElementById('winnerAnnouncement');
+            if (topScore === 0) {
+                announcement.innerText = "Game ended! No points were scored.";
+            } else if (winners.length === 1) {
+                announcement.innerText = `🏆 Champion: ${winners[0].name} with ${winners[0].score} points!`;
+            } else {
+                const winnerNames = winners.map(w => w.name).join(', ');
+                announcement.innerText = `🏆 It's a Tie! Winners: ${winnerNames} (${topScore} pts)!`;
+            }
+
+            const rankingsList = document.getElementById('finalRankingsList');
+            rankingsList.innerHTML = '';
+
+            sorted.forEach((player, rank) => {
+                const isWinner = player.score === topScore && player.score > 0;
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-2xl border flex justify-between items-center ${isWinner ? 'bg-gold/10 border-gold' : 'bg-slate-50 border-slate-200'}`;
+                card.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm font-black ${isWinner ? 'text-gold-dark' : 'text-slate-400'}">#${rank + 1}</span>
+                        <div>
+                            <div class="font-extrabold text-sm text-navy flex items-center gap-1">
+                                ${player.name}
+                                ${isWinner ? '👑' : ''}
+                            </div>
+                            <div class="text-[11px] text-slate-500">
+                                Completed: ${player.truthsDone + player.daresDone} | Passed: ${player.passed} | Failed: ${player.failed}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-base font-black text-navy">
+                        ${player.score} pts
+                    </div>
+                `;
+                rankingsList.appendChild(card);
+            });
+
+            switchScreen('resultsScreen');
+        }
+
+        function restartGameSamePlayers() {
+            startGame();
+        }
+    </script>
+</body>
+</html>
